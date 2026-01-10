@@ -1,0 +1,29 @@
+# Environment
+.env
+.env.local
+.venv
+env/
+venv/
+__pycache__/
+*.pyc
+
+# IDEs
+.vscode/
+.idea/
+
+# Data & Models (Local)
+backend/data/
+backend/models/
+backend/exports/
+*.db
+*.sqlite3
+
+# Node
+node_modules/
+dist/
+build/
+coverage/
+
+# Misc
+.DS_Store
+*.log
