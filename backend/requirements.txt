@@ -1,0 +1,38 @@
+# Core
+fastapi==0.110.0
+uvicorn[standard]==0.27.0
+python-dotenv==1.0.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Database
+aiosqlite==0.19.0
+
+# Azure AI
+azure-cognitiveservices-speech==1.35.0
+openai==1.12.0
+azure-ai-documentintelligence==1.0.0b1
+azure-storage-blob==12.19.0
+
+# Local AI (Edge mode)
+av==13.1.0
+transformers==4.35.0
+torch==2.2.0
+sounddevice==0.4.6
+numpy==1.26.0
+
+# PDF Generation
+weasyprint==60.2
+pydyf==0.10.0
+
+# Security
+bcrypt==4.1.2
+cryptography==42.0.0
+python-jose[cryptography]==3.3.0
+
+# Utilities
+httpx==0.26.0
+jiwer==3.0.0  # WER calculation
+tqdm==4.66.0
+python-multipart
+google-generativeai>=0.7.0
