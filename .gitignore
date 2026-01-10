@@ -27,3 +27,8 @@ coverage/
 # Misc
 .DS_Store
 *.log
+
+# Local Documentation & Drafts (Root only)
+/*.md
+/*.txt
+!/README.md
