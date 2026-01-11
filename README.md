@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="frontend/public/icon.ico" alt="CoronerIA Logo" width="120" />
+  <img src="frontend/public/image.png" alt="CoronerIA Logo" width="120" />
   <h1>CoronerIA</h1>
   <h3>The AI-Powered Forensic Associate</h3>
   <p>
@@ -68,3 +68,4 @@ docker-compose up --build
 <div align="center">
   <sub><strong>Imagine Cup 2026 Submission</strong> • Team CoronerIA</sub>
 </div>
+
