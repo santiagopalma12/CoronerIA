@@ -137,7 +137,7 @@ export default function Login() {
                     className="text-center mt-8 font-mono text-xs uppercase tracking-widest"
                     style={{ color: 'var(--text-muted)' }}
                 >
-                    CoronerIA v3.0 [Gemini 3]
+                    CoronerIA v3.0 [Sekhmed]
                 </p>
             </div>
         </div>

@@ -3,7 +3,8 @@
  * Cada sección corresponde a una parte del protocolo IMLCF
  */
 
-import { Brain, Activity, User, Skull, Camera, FileText, Thermometer } from 'lucide-react'
+import { useState } from 'react'
+import { Brain, Activity, User, Skull, Camera, FileText, Thermometer, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import {
     FormSection, TextField, TextArea, SelectField,
     PresenciaLesionesField, OrganWeightField, CheckboxGroup, TemperatureField
@@ -754,6 +755,10 @@ export function ExamenInternoAbdomenForm({ data, onChange }: ExamenInternoAbdome
     )
 }
 
+// Imports consolidated at top
+
+// ... existing imports ...
+
 // ============================================
 // 12. CAUSAS DE MUERTE
 // ============================================
@@ -761,11 +766,112 @@ export function ExamenInternoAbdomenForm({ data, onChange }: ExamenInternoAbdome
 interface CausasMuerteFormProps {
     data: Partial<CausasDeMuerte>
     onChange: (field: string, value: any) => void
+    findingsContext?: string // Contexto completo para el análisis
 }
 
-export function CausasMuerteForm({ data, onChange }: CausasMuerteFormProps) {
+export function CausasMuerteForm({ data, onChange, findingsContext = '' }: CausasMuerteFormProps) {
+    const [isAnalyzing, setIsAnalyzing] = useState(false)
+    const [analysisError, setAnalysisError] = useState('')
+    // const [analysisSuccess, setAnalysisSuccess] = useState(false) // Removing unused variable
+    const [reasoning, setReasoning] = useState('')
+
+    const handleAnalyze = async () => {
+        if (!findingsContext || findingsContext.length < 50) {
+            setAnalysisError('No hay suficientes hallazgos registrados para analizar (mínimo 50 caracteres).')
+            return
+        }
+
+        setIsAnalyzing(true)
+        setAnalysisError('')
+        // setAnalysisSuccess(false)
+        setReasoning('')
+
+        try {
+            const response = await fetch('/api/ner/analyze-death-cause', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ findings_text: findingsContext })
+            })
+
+            if (!response.ok) throw new Error('Error en el servicio de análisis')
+
+            const result = await response.json()
+
+            // Auto-fill fields if they are empty or if user confirms (here we just overwrite for demo speed)
+            if (result.causa_final) onChange('diagnostico_presuntivo.causa_final.texto', result.causa_final)
+            if (result.causa_intermedia) onChange('diagnostico_presuntivo.causa_intermedia.texto', result.causa_intermedia)
+            if (result.causa_basica) onChange('diagnostico_presuntivo.causa_basica.texto', result.causa_basica)
+
+            if (result.razonamiento_clinico) {
+                setReasoning(result.razonamiento_clinico)
+            }
+
+            // setAnalysisSuccess(true)
+        } catch (error) {
+            console.error(error)
+            setAnalysisError('No se pudo completar el análisis con Sekhmed AI. Intente nuevamente.')
+        } finally {
+            setIsAnalyzing(false)
+        }
+    }
+
     return (
         <FormSection title="Causa(s) de Muerte" icon={<Skull size={18} />}>
+
+            {/* Advanced AI Analysis Section */}
+            <div className="mb-6 rounded-xl p-4 border border-blue-500/30 bg-blue-500/5">
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                        <Brain className="text-blue-400" size={20} />
+                        <h4 className="font-semibold text-blue-100">Razonamiento Forense (Sekhmed AI)</h4>
+                    </div>
+                    <span className="text-xs font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-300">
+                        ADVANCED REASONING
+                    </span>
+                </div>
+
+                <p className="text-sm text-slate-400 mb-4">
+                    Utilice el motor de IA avanzado para deducir la cadena causal basada en los hallazgos registrados.
+                </p>
+
+                {analysisError && (
+                    <div className="mb-4 p-3 rounded bg-red-500/10 border border-red-500/20 text-red-200 text-sm flex items-start gap-2">
+                        <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+                        {analysisError}
+                    </div>
+                )}
+
+                {reasoning && (
+                    <div className="mb-4 p-4 rounded bg-slate-900/50 border border-slate-700 text-sm animate-in fade-in slide-in-from-top-2 duration-500">
+                        <h5 className="text-blue-300 font-medium mb-2 flex items-center gap-2">
+                            <CheckCircle2 size={16} />
+                            Análisis Clínico:
+                        </h5>
+                        <p className="text-slate-300 leading-relaxed font-mono text-xs md:text-sm">
+                            {reasoning}
+                        </p>
+                    </div>
+                )}
+
+                <button
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing}
+                    className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium shadow-lg shadow-blue-900/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+                >
+                    {isAnalyzing ? (
+                        <>
+                            <Loader2 size={18} className="animate-spin" />
+                            ANALIZANDO EVIDENCIA...
+                        </>
+                    ) : (
+                        <>
+                            <Brain size={18} className="group-hover:scale-110 transition-transform" />
+                            ANALIZAR CAUSA DE MUERTE
+                        </>
+                    )}
+                </button>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Diagnóstico Presuntivo */}
                 <div className="bg-slate-900/50 rounded-lg p-4">

@@ -219,11 +219,11 @@ export default function Dashboard() {
                 style={{ borderTop: '1px solid var(--border-primary)' }}
             >
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
+                    <p className="text-slate-500 text-xs">
+                        CORONERIA V3.0 [SEKHMED]
+                    </p>
                     <span className="mono-tag">
-                        CORONERIA V3.0 [GEMINI 3]
-                    </span>
-                    <span className="mono-tag">
-                        IMAGINE CUP 2026
+                        BY DR. SANTIAGO PALMA
                     </span>
                 </div>
             </footer>

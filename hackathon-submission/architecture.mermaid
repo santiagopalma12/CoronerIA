@@ -1,0 +1,17 @@
+graph TD
+    User[Médico Legista] -->|Dictado de Audio| Frontend[CoronerIA Frontend v3.0]
+    Frontend -->|Audio Stream| Backend[FastAPI Backend]
+    
+    subgraph "Hybrid AI Engine"
+        Backend -->|Audio + Basic NER| GeminiLite[Gemini 2.0 Flash-Lite]
+        Backend -->|Complex Context| GeminiReason[Gemini 3 Flash-Preview]
+        
+        GeminiLite -->|Transcripción Rápida| Backend
+        GeminiReason -->|Razonamiento Causal| Backend
+    end
+    
+    Backend -->|Datos Estructurados| DB[(Storage / SQL)]
+    Backend -->|JSON Analysis| Frontend
+    
+    style GeminiReason fill:#4285F4,stroke:#fff,stroke-width:2px,color:#fff
+    style GeminiLite fill:#34A853,stroke:#fff,stroke-width:2px,color:#fff

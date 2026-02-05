@@ -56,7 +56,7 @@ export const useTranscriptionStore = create<TranscriptionState>((set, get) => ({
                 const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2)
                 console.log(`🎤 Audio total: ${sizeMB} MB`)
 
-                // Verificar tamaño máximo (50MB para Azure Speech)
+                // Verificar tamaño máximo (50MB límite)
                 if (audioBlob.size > 50 * 1024 * 1024) {
                     set({
                         error: `Audio muy grande (${sizeMB} MB). Máximo: 50 MB.`,

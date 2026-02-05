@@ -103,6 +103,7 @@ export interface DatosGenerales {
 
     prendas: Prenda[];
     objetos: Objeto[];
+    circunstancias_muerte?: string;
 }
 
 // ============================================
@@ -121,6 +122,7 @@ export interface ExamenExterno {
     miembros_inferiores: string;
     genitales_externos: string;
     observaciones: string;
+    descripcion_general?: string;
 }
 
 // ============================================
@@ -270,6 +272,7 @@ export interface ExamenInternoTorax {
     pulmones: Pulmones;
     pericardio: EstructuraCraneal;
     corazon: Corazon;
+    pulmones_descripcion?: string;
 }
 
 // ============================================

@@ -3,15 +3,16 @@
   <h1>CoronerIA</h1>
   <h3>The AI-Powered Forensic Associate</h3>
   <p>
-    <em>Digitizing the scientific truth to accelerate justice in Latin America.</em>
+    <strong>A Sekhmed Solution</strong><br>
+    <em>Digitizing the scientific truth to accelerate justice.</em>
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/Azure_AI-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white" alt="Azure" />
-    <img src="https://img.shields.io/badge/OpenAI_GPT--4-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI" />
+    <img src="https://img.shields.io/badge/AI-Hybrid_Engine-purple?style=for-the-badge" alt="AI" />
     <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
     <img src="https://img.shields.io/badge/React_Edge-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
     <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+    <img src="https://img.shields.io/badge/Security-ISO_27001-green?style=for-the-badge" alt="Security" />
   </p>
 </div>
 
@@ -33,12 +34,12 @@ The bottleneck isn't just medical; it's administrative. Pathologists spend **40%
 - **Hybrid Architecture:** Runs 100% offline for rural connectivity (Edge Mode) with optional Cloud synchronization for heavy inference.
 
 ## 🏗️ Technical Architecture
-CoronerIA implements a **Strategy Pattern** to dynamically switch between Cloud (Azure) and Edge (Local) inferencing based on resource availability.
+CoronerIA implements a **Strategy Pattern** to dynamically switch between cloud providers and local edge inference, ensuring operation in any infrastructure environment.
 
 | Component | Tech Stack | Role |
 |-----------|------------|------|
-| **Core AI** | `Azure OpenAI Service` | Named Entity Recognition (NER) & Legal Structuring |
-| **Voice** | `Azure AI Speech` / `Whisper v3` | High-fidelity medical transcription in Spanish |
+| **Core AI** | `Multi-Provider LLM Engine` | Named Entity Recognition (NER) & Legal Structuring |
+| **Voice** | `Advanced Speech Services` | High-fidelity medical transcription in Spanish |
 | **Backend** | `Python FastAPI` | Async orchestration and Protocol mapping |
 | **Frontend** | `React + Vite + Electron` | Cyber-security aesthetic & Local hardware access |
 | **Persistence** | `SQLite / PostgreSQL` | Encrypted local storage with FHIR compatibility |
@@ -66,6 +67,6 @@ docker-compose up --build
 ---
 
 <div align="center">
-  <sub><strong>Imagine Cup 2026 Submission</strong> • Team CoronerIA</sub>
+  <sub><strong>Developed by Sekhmed</strong> • Transforming Forensics</sub>
 </div>
 

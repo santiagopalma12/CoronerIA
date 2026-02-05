@@ -260,7 +260,7 @@ export default function Dictation() {
 
                 <div className="flex items-center gap-3">
                     <span className="category-tag text-xs">
-                        {isOnline ? 'AZURE' : 'EDGE'}
+                        {isOnline ? 'CLOUD' : 'EDGE'}
                     </span>
                     <ThemeToggle />
                     <button
@@ -511,6 +511,27 @@ export default function Dictation() {
                                 <CausasMuerteForm
                                     data={currentCase?.causas_muerte || {}}
                                     onChange={handleSectionChange('causas_muerte')}
+                                    findingsContext={[
+                                        // Construimos un contexto rico para el razonamiento de Gemini 3
+                                        currentCase?.datos_generales?.circunstancias_muerte
+                                            ? `CIRCUNSTANCIAS: ${currentCase.datos_generales.circunstancias_muerte}` : '',
+                                        currentCase?.examen_externo?.descripcion_general
+                                            ? `EXAMEN EXTERNO: ${currentCase.examen_externo.descripcion_general}` : '',
+                                        currentCase?.examen_interno_cabeza?.encefalo?.descripcion
+                                            ? `CABEZA/ENCÉFALO: ${currentCase.examen_interno_cabeza.encefalo.descripcion}` : '',
+                                        currentCase?.examen_interno_torax?.corazon?.descripcion
+                                            ? `CORAZÓN: ${currentCase.examen_interno_torax.corazon.descripcion}` : '',
+                                        currentCase?.examen_interno_torax?.pulmones_descripcion
+                                            ? `PULMONES: ${currentCase.examen_interno_torax.pulmones_descripcion}` : '',
+                                        currentCase?.examen_interno_abdomen?.higado?.descripcion
+                                            ? `HÍGADO: ${currentCase.examen_interno_abdomen.higado.descripcion}` : '',
+                                        currentCase?.examen_interno_abdomen?.bazo?.descripcion
+                                            ? `BAZO: ${currentCase.examen_interno_abdomen.bazo.descripcion}` : '',
+                                        currentCase?.lesiones_traumaticas?.descripcion
+                                            ? `LESIONES TRAUMÁTICAS: ${currentCase.lesiones_traumaticas.descripcion}` : '',
+                                        // Usamos también el texto transcrito si hay poca data estructurada
+                                        transcript && transcript.length > 50 ? `TRANSCRIPCIÓN DICTADO: ${transcript}` : ''
+                                    ].filter(Boolean).join('\n\n')}
                                 />
                             )}
                         </div>
