@@ -207,16 +207,17 @@ interface PresenciaLesionesFieldProps {
     onPresenciaChange: (value: SiNo) => void
     onLesionesChange: (value: SiNoIgnora) => void
     placeholder?: string
+    className?: string
 }
 
 export function PresenciaLesionesField({
     label, descripcion, presencia, lesiones,
     onDescripcionChange, onPresenciaChange, onLesionesChange,
-    placeholder = 'Descripción...'
+    placeholder = 'Descripción...', className = ''
 }: PresenciaLesionesFieldProps) {
     return (
         <div
-            className="rounded-lg p-4"
+            className={`rounded-lg p-4 ${className}`}
             style={{
                 backgroundColor: 'var(--bg-hover)',
                 border: '1px solid var(--border-primary)'
@@ -304,16 +305,17 @@ interface OrganWeightFieldProps {
     onDescripcionChange: (value: string) => void
     onPresenciaChange: (value: SiNo) => void
     onLesionesChange: (value: SiNoIgnora) => void
+    className?: string
 }
 
 export function OrganWeightField({
     label, peso, medidas, descripcion, presencia, lesiones,
     onPesoChange, onMedidasChange, onDescripcionChange,
-    onPresenciaChange, onLesionesChange
+    onPresenciaChange, onLesionesChange, className = ''
 }: OrganWeightFieldProps) {
     return (
         <div
-            className="rounded-lg p-4"
+            className={`rounded-lg p-4 ${className}`}
             style={{
                 backgroundColor: 'var(--bg-hover)',
                 border: '1px solid var(--border-primary)'

@@ -648,7 +648,7 @@ export function ExamenInternoAbdomenForm({ data, onChange }: ExamenInternoAbdome
                         <CheckboxGroup
                             label="Litiasis"
                             options={[{ value: 'si', label: 'Presenta Litiasis' }]}
-                            selected={get(data, 'vesicula_biliar.litiasis') ? ['si'] : []}
+                            selected={get(data, 'vesicula_biliar.litiasis', false) ? ['si'] : []}
                             onChange={(v) => onChange('vesicula_biliar.litiasis', v.includes('si'))}
                         />
                     </div>
@@ -1110,7 +1110,6 @@ export function ExamenExternoForm({ data, onChange }: ExamenExternoFormProps) {
                     rows={2}
                 />
             </div>
-            />
         </FormSection>
     )
 }
@@ -1341,7 +1340,7 @@ export function AparatoGenitalForm({ data, onChange }: AparatoGenitalFormProps) 
                     />
                 </div>
 
-                {get(data, 'femenino.presencia') === 'si' && (
+                {(get(data, 'femenino.presencia', '') as string) === 'si' && (
                     <>
                         <OrganWeightField
                             label="Útero"
@@ -1383,9 +1382,9 @@ export function AparatoGenitalForm({ data, onChange }: AparatoGenitalFormProps) 
                                     ]}
                                     // Hack simple para checkbox group con booleans independientes
                                     selected={[
-                                        get(data, 'femenino.cavidad_endometrial.placenta') ? 'placenta' : '',
-                                        get(data, 'femenino.cavidad_endometrial.feto') ? 'feto' : '',
-                                        get(data, 'femenino.cavidad_endometrial.otros') ? 'otros' : ''
+                                        get(data, 'femenino.cavidad_endometrial.placenta', false) ? 'placenta' : '',
+                                        get(data, 'femenino.cavidad_endometrial.feto', false) ? 'feto' : '',
+                                        get(data, 'femenino.cavidad_endometrial.otros', false) ? 'otros' : ''
                                     ].filter(Boolean)}
                                     onChange={(vals) => {
                                         onChange('femenino.cavidad_endometrial.placenta', vals.includes('placenta'));
@@ -1442,7 +1441,7 @@ export function AparatoGenitalForm({ data, onChange }: AparatoGenitalFormProps) 
                         options={[{ value: 'si', label: 'Sí' }, { value: 'no', label: 'No' }]}
                     />
                 </div>
-                {get(data, 'masculino.presencia') === 'si' && (
+                {(get(data, 'masculino.presencia', '') as string) === 'si' && (
                     <div className="space-y-3">
                         <TextArea
                             label="Próstata (Descripción)"
@@ -1507,7 +1506,7 @@ export function PerennizacionForm({ data, onChange }: PerennizacionFormProps) {
                 />
             </div>
 
-            {get(data, 'se_realizo') === 'si' && (
+            {(get(data, 'se_realizo', '') as string) === 'si' && (
                 <>
                     <h5 className="text-sm font-medium text-slate-300 mb-2">Tipo de Medio</h5>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-3">
@@ -1518,8 +1517,8 @@ export function PerennizacionForm({ data, onChange }: PerennizacionFormProps) {
                                 { value: 'digital', label: 'Digital' }
                             ]}
                             selected={[
-                                get(data, 'tipo.fotografico_revelado') ? 'revelado' : '',
-                                get(data, 'tipo.fotografico_digital') ? 'digital' : ''
+                                get(data, 'tipo.fotografico_revelado', false) ? 'revelado' : '',
+                                get(data, 'tipo.fotografico_digital', false) ? 'digital' : ''
                             ].filter(Boolean)}
                             onChange={(vals) => {
                                 onChange('tipo.fotografico_revelado', vals.includes('revelado'));
@@ -1534,9 +1533,9 @@ export function PerennizacionForm({ data, onChange }: PerennizacionFormProps) {
                                 { value: 'memoria', label: 'M. Digital' }
                             ]}
                             selected={[
-                                get(data, 'tipo.video_cinta') ? 'cinta' : '',
-                                get(data, 'tipo.video_disco_compacto') ? 'cd' : '',
-                                get(data, 'tipo.video_memoria_digital') ? 'memoria' : ''
+                                get(data, 'tipo.video_cinta', false) ? 'cinta' : '',
+                                get(data, 'tipo.video_disco_compacto', false) ? 'cd' : '',
+                                get(data, 'tipo.video_memoria_digital', false) ? 'memoria' : ''
                             ].filter(Boolean)}
                             onChange={(vals) => {
                                 onChange('tipo.video_cinta', vals.includes('cinta'));
@@ -1628,7 +1627,7 @@ export function DatosReferencialesForm({ data, onChange }: DatosReferencialesFor
                 <CheckboxGroup
                     label=""
                     options={[{ value: 'si', label: 'Donado a Institución Educativa' }]}
-                    selected={get(data, 'donado_institucion_educativa') ? ['si'] : []}
+                    selected={get(data, 'donado_institucion_educativa', false) ? ['si'] : []}
                     onChange={(v) => onChange('donado_institucion_educativa', v.includes('si'))}
                 />
                 <div className="flex-1">
@@ -1659,13 +1658,13 @@ export function OrganosAdicionalesForm({ data, onChange }: OrganosAdicionalesFor
                 <CheckboxGroup
                     label=""
                     options={[{ value: 'placenta', label: 'Placenta' }]}
-                    selected={get(data, 'placenta') ? ['placenta'] : []}
+                    selected={get(data, 'placenta', false) ? ['placenta'] : []}
                     onChange={(v) => onChange('placenta', v.includes('placenta'))}
                 />
                 <CheckboxGroup
                     label=""
                     options={[{ value: 'cordon', label: 'Cordón Umbilical' }]}
-                    selected={get(data, 'cordon_umbilical') ? ['cordon'] : []}
+                    selected={get(data, 'cordon_umbilical', false) ? ['cordon'] : []}
                     onChange={(v) => onChange('cordon_umbilical', v.includes('cordon'))}
                 />
             </div>
