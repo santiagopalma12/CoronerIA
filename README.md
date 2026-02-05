@@ -29,17 +29,17 @@ The bottleneck isn't just medical; it's administrative. Pathologists spend **40%
 ## ⚡ The Solution
 **CoronerIA** is a specialized AI Copilot designed for the high-stakes environment of the autopsy room.
 
-- **Hands-Free Operation:** Real-time medicaldictation using **Azure AI Speech**.
-- **Cognitive Structuring:** Automatically transforms unstructured voice into legally valid JSON protocols (Minnesota & Ibrahim Standards) using **Azure OpenAI (GPT-4)**.
-- **Hybrid Architecture:** Runs 100% offline for rural connectivity (Edge Mode) with optional Cloud synchronization for heavy inference.
+- **Hands-Free Operation:** Real-time medical dictation using **Neural Speech AI**.
+- **Cognitive Structuring:** Automatically transforms unstructured voice into legally valid JSON protocols (Minnesota & Ibrahim Standards) using **Clinical Reasoning Engine**.
+- **Hybrid Architecture:** Runs 100% offline for rural connectivity (Edge Mode) with optional Cloud synchronization for heavy reasoning.
 
 ## 🏗️ Technical Architecture
 CoronerIA implements a **Strategy Pattern** to dynamically switch between cloud providers and local edge inference, ensuring operation in any infrastructure environment.
 
 | Component | Tech Stack | Role |
 |-----------|------------|------|
-| **Core AI** | `Multi-Provider LLM Engine` | Named Entity Recognition (NER) & Legal Structuring |
-| **Voice** | `Advanced Speech Services` | High-fidelity medical transcription in Spanish |
+| **Core AI** | `Hybrid Intelligence Engine` | Named Entity Recognition (NER) & Legal Structuring |
+| **Voice** | `Neural Speech Services` | High-fidelity medical transcription in Spanish |
 | **Backend** | `Python FastAPI` | Async orchestration and Protocol mapping |
 | **Frontend** | `React + Vite + Electron` | Cyber-security aesthetic & Local hardware access |
 | **Persistence** | `SQLite / PostgreSQL` | Encrypted local storage with FHIR compatibility |
@@ -52,7 +52,7 @@ The entire system is containerized for immediate deployment on forensic workstat
 git clone https://github.com/santiagopalma12/CoronerIA.git
 cd CoronerIA
 
-# 2. Configure Environment (Add your Azure Keys)
+# 2. Configure Environment (Add your API Keys)
 cp .env.example .env
 
 # 3. Launch the System
