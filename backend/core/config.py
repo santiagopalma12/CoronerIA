@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     CORONERIA_DATA: str = "./data"
     CORONERIA_MODELS: str = "./models"
     CORONERIA_EXPORTS: str = "./exports"
+
+    # Feature Flags (Arquitectura Híbrida)
+    ENABLE_CLOUD_BACKUP: bool = False
+    ENABLE_MEDICAL_DICTIONARY: bool = True
+
     
     # Security
     SECRET_KEY: str = "change-this-in-production"
@@ -47,6 +52,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
     
     @property
     def is_azure_configured(self) -> bool:
@@ -64,6 +70,12 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # Crear directorios si no existen
-os.makedirs(settings.FORENSIA_DATA, exist_ok=True)
-os.makedirs(settings.FORENSIA_MODELS, exist_ok=True)
-os.makedirs(settings.FORENSIA_EXPORTS, exist_ok=True)
+# Crear directorios si no existen (CORONERIA_DATA es relativo, hay que asegurar path absoluto si se desea, peromakedirs soporta relativos)
+# Crear directorios si no existen (CORONERIA_DATA es relativo, hay que asegurar path absoluto si se desea, peromakedirs soporta relativos)
+try:
+    os.makedirs(settings.CORONERIA_DATA, exist_ok=True)
+    os.makedirs(settings.CORONERIA_MODELS, exist_ok=True)
+    os.makedirs(settings.CORONERIA_EXPORTS, exist_ok=True)
+    print(f"[INFO] Directorios verificados: {settings.CORONERIA_DATA}")
+except Exception as e:
+    print(f"[WARNING] Warning creando directorios: {e}")

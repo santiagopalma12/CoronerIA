@@ -12,7 +12,7 @@ from core.config import settings
 def setup_logging():
     """Configura el sistema de logging."""
     
-    log_dir = Path(settings.FORENSIA_DATA) / "logs"
+    log_dir = Path(settings.CORONERIA_DATA) / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     
     log_file = log_dir / "forensia.log"

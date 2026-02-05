@@ -123,4 +123,4 @@ async def init_db():
         """)
         
         await db.commit()
-        print("✅ Base de datos inicializada")
+        print("[INFO] Base de datos inicializada")

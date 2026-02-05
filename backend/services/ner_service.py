@@ -11,6 +11,7 @@ from typing import Dict, Any, List
 
 from core.config import settings
 from services.gemini_service import GeminiService
+from services.validation_service import ValidationService
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +125,8 @@ class NERService:
         if self._mode == "gemini":
             self._gemini_service = GeminiService()
         
+        self._validation_service = ValidationService()
+        
         logger.info(f"NERService inicializado en modo: {self._mode}")
     
     def _determine_mode(self) -> str:
@@ -152,6 +155,17 @@ class NERService:
              # Usamos el método extract_entities de GeminiService que ya devuelve la estructura correcta
             result = await self._gemini_service.extract_entities(text)
             result["mode"] = "gemini"
+            
+            # --- FASE 4: VALIDACIÓN HÍBRIDA ---
+            logger.info("🔍 Ejecutando validación biológica cruzada...")
+            warnings = self._validation_service.validate_case(result)
+            if warnings:
+                logger.warning(f"⚠️ Se detectaron {len(warnings)} inconsistencias.")
+                result['validation_warnings'] = warnings
+            else:
+                logger.info("✅ Validación biológica exitosa.")
+                result['validation_warnings'] = []
+            
             return result
         else:
             return await self._extract_local(text)

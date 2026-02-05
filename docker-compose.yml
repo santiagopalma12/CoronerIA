@@ -20,6 +20,7 @@ services:
       - CORONERIA_LANGUAGE=es-PE
       - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
     volumes:
+      - ./backend:/app
       - ./backend/data:/app/data
       - ./backend/exports:/app/exports
     restart: unless-stopped

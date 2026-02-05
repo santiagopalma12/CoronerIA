@@ -12,6 +12,7 @@ from typing import Dict, Any
 from uuid import uuid4
 
 from core.config import settings
+from services.storage_service import StorageService
 
 # Crear directorio de exports
 EXPORTS_DIR = Path(settings.CORONERIA_EXPORTS)
@@ -20,6 +21,9 @@ EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
 class DocumentService:
     """Servicio de generación de documentos."""
+    
+    def __init__(self):
+        self.storage_service = StorageService()
     
     async def generate_pdf(self, case_id: str, case_data: Dict[str, Any]) -> str:
         """Genera PDF en formato IMLCF."""
@@ -33,6 +37,14 @@ class DocumentService:
         pdf_path = EXPORTS_DIR / filename
         
         HTML(string=html_content).write_pdf(str(pdf_path))
+        
+        # --- FASE 2: BACKUP AUTOMÁTICO (Simulado o Real) ---
+        # Subir el PDF generado al bucket de "informes-finales"
+        cloud_url = await self.storage_service.upload_file(
+            file_path=str(pdf_path),
+            container_name="informes-finales",
+            blob_name=filename
+        )
         
         return str(pdf_path)
     
