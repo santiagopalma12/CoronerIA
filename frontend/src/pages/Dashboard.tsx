@@ -220,7 +220,7 @@ export default function Dashboard() {
             >
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                     <span className="mono-tag">
-                        CORONERIA V1.0.0
+                        CORONERIA V3.0 [GEMINI 3]
                     </span>
                     <span className="mono-tag">
                         IMAGINE CUP 2026

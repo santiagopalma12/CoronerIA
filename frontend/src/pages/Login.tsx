@@ -137,7 +137,7 @@ export default function Login() {
                     className="text-center mt-8 font-mono text-xs uppercase tracking-widest"
                     style={{ color: 'var(--text-muted)' }}
                 >
-                    CoronerIA v1.0.0 · Imagine Cup 2026
+                    CoronerIA v3.0 [Gemini 3]
                 </p>
             </div>
         </div>
