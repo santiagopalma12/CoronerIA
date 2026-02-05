@@ -9,18 +9,22 @@ class GeminiService:
     def __init__(self):
         if settings.GEMINI_API_KEY:
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            self.model = genai.GenerativeModel('gemini-2.0-flash-lite')
-            logger.info("✅ Gemini Service inicializado con modelo gemini-2.0-flash-lite")
+            # Modelo Base (Eficiente para transcripción y extracción)
+            self.basic_model = genai.GenerativeModel('gemini-2.0-flash-lite')
+            # Modelo Razonamiento (Avanzado para causas de muerte)
+            self.reasoning_model = genai.GenerativeModel('gemini-3-flash-preview')
+            logger.info("✅ Gemini Service híbrido inicializado (v2.0 Lite + v3 Flash Preview)")
         else:
-            self.model = None
-            logger.warning("⚠️ GEMINI_API_KEY no configurada. El servicio Gemini no funcionará.")
+            self.basic_model = None
+            self.reasoning_model = None
+            logger.warning("⚠️ GEMINI_API_KEY no configurada.")
 
     async def transcribe_audio(self, audio_path: str) -> str:
         """
         Transcribe audio utilizando Gemini 1.5 Flash (Multimodal).
         Sube el archivo a la API de Gemini y solicita la transcripción.
         """
-        if not self.model:
+        if not self.basic_model:
             raise ValueError("Gemini no está configurado. Verifica GEMINI_API_KEY.")
 
         try:
@@ -51,11 +55,25 @@ class GeminiService:
             """
 
             logger.info("🧠 Generando transcripción con Gemini...")
-            response = self.model.generate_content([prompt, audio_file])
             
-            text = response.text
-            logger.info(f"✅ Transcripción Gemini completada ({len(text)} caracteres)")
-            return text
+            # Retry Logic para 429 Resource Exhausted
+            import time
+            max_retries = 3
+            base_delay = 2
+            
+            for attempt in range(max_retries + 1):
+                try:
+                    response = self.basic_model.generate_content([prompt, audio_file])
+                    text = response.text
+                    logger.info(f"✅ Transcripción Gemini completada ({len(text)} caracteres)")
+                    return text
+                except Exception as e:
+                    if "429" in str(e) and attempt < max_retries:
+                        sleep_time = base_delay * (2 ** attempt)
+                        logger.warning(f"⚠️ Cuota excedida (429). Reintentando en {sleep_time}s... (Intento {attempt + 1}/{max_retries})")
+                        time.sleep(sleep_time)
+                    else:
+                        raise e
 
         except Exception as e:
             logger.error(f"❌ Error en transcripción Gemini: {e}")
@@ -66,7 +84,7 @@ class GeminiService:
         Extrae entidades médico-legales del texto usando Gemini.
         Utiliza la estructura de campos v2.0 del protocolo IMLCF.
         """
-        if not self.model:
+        if not self.basic_model:
             raise ValueError("Gemini no está configurado.")
 
         prompt = f"""
@@ -137,15 +155,87 @@ Responde SOLO con JSON válido, sin markdown ni comentarios.
         
         try:
             logger.info("🔍 Extrayendo entidades v2.0 con Gemini...")
-            response = self.model.generate_content(prompt)
-            # Limpiar posible markdown ```json ... ```
-            clean_text = response.text.replace("```json", "").replace("```", "").strip()
-            import json
-            result = json.loads(clean_text)
-            logger.info(f"✅ NER v2.0: {len(result.get('mapped_fields', {}))} campos extraídos")
-            return result
+            # Retry Logic para 429 Resource Exhausted
+            import time
+            max_retries = 3
+            base_delay = 2
+            
+            for attempt in range(max_retries + 1):
+                try:
+                    response = self.basic_model.generate_content(prompt)
+                    # Limpiar posible markdown ```json ... ```
+                    clean_text = response.text.replace("```json", "").replace("```", "").strip()
+                    import json
+                    result = json.loads(clean_text)
+                    logger.info(f"✅ NER v2.0: {len(result.get('mapped_fields', {}))} campos extraídos")
+                    return result
+                except Exception as e:
+                    if "429" in str(e) and attempt < max_retries:
+                        sleep_time = base_delay * (2 ** attempt)
+                        logger.warning(f"⚠️ Cuota NER excedida (429). Reintentando en {sleep_time}s... (Intento {attempt + 1}/{max_retries})")
+                        time.sleep(sleep_time)
+                    else:
+                        raise e
         except Exception as e:
-            logger.error(f"❌ Error NER Gemini: {e}")
             return {"entities": [], "mapped_fields": {}}
+
+    async def analyze_death_cause(self, findings_text: str) -> dict:
+        """
+        Utiliza Gemini 3 (Reasoning Model) para deducir la causa de muerte
+        basada en los hallazgos transcritos.
+        """
+        if not self.reasoning_model:
+            raise ValueError("Gemini 3 (Reasoning) no está configurado.")
+
+        prompt = f"""
+        Actúa como un Médico Legista Senior.
+        Analiza los siguientes HALLAZGOS DE NECROPSIA y razona paso a paso para determinar la Causa de Muerte.
+        Utiliza tu capacidad de razonamiento profundo para conectar lesiones y patologías.
+
+        HALLAZGOS:
+        "{findings_text}"
+        
+        Tu tarea:
+        1. Identificar la Causa Final (mecanismo que produjo la muerte directa).
+        2. Identificar la Causa Intermedia (consecuencia patológica).
+        3. Identificar la Causa Básica (evento o enfermedad inicial).
+        4. Proveer un "razonamiento_clinico" detallado justificando tu deducción.
+
+        Responde SOLO en JSON con este formato:
+        {{
+            "causa_final": "...",
+            "causa_intermedia": "...",
+            "causa_basica": "...",
+            "razonamiento_clinico": "..."
+        }}
+        """
+
+        try:
+            logger.info("🧠 Gemini 3 Thinking: Analizando causa de muerte...")
+            
+            # Retry Logic
+            import time
+            max_retries = 3
+            base_delay = 2
+            
+            for attempt in range(max_retries + 1):
+                try:
+                    response = self.reasoning_model.generate_content(prompt)
+                    clean_text = response.text.replace("```json", "").replace("```", "").strip()
+                    import json
+                    result = json.loads(clean_text)
+                    logger.info("✅ Gemini 3: Análisis completado.")
+                    return result
+                except Exception as e:
+                    if "429" in str(e) and attempt < max_retries:
+                        sleep_time = base_delay * (2 ** attempt)
+                        logger.warning(f"⚠️ Gemini 3 Busy (429). Reintentando en {sleep_time}s...")
+                        time.sleep(sleep_time)
+                    else:
+                        raise e
+                        
+        except Exception as e:
+            logger.error(f"❌ Error Gemini 3 Reasoning: {e}")
+            raise
 
 print("Gemini Service Loaded")
